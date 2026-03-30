@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMIQ | ストリーム株式会社</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* =========================================
+           1. タイポグラフィと余白の美学
+           ========================================= */
+        :root {
+            --color-text: #111111;
+            --color-bg: #ffffff;
+            --color-gray: #dddddd;
+            --color-gray-dark: #444444;
+        }
+        
+        body {
+            /* 読みやすさを重視したゴシック体指定 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .text-unit { display: inline-block; white-space: nowrap; vertical-align: top; }
+
+        /* 高齢の方にも読みやすいよう、最小サイズを少し大きめに設定 */
+        .fluid-h1 { font-size: clamp(2rem, 5vw + 1rem, 5rem); line-height: 1.3; letter-spacing: 0.02em; font-weight: 700; }
+        .fluid-h2 { font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem); line-height: 1.4; letter-spacing: 0.05em; font-weight: 700; }
+        .fluid-p { font-size: clamp(1rem, 1vw + 0.3rem, 1.125rem); line-height: 2; letter-spacing: 0.05em; font-weight: 400; color: var(--color-gray-dark); }
+
+        .section-padding { padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 5rem); }
+
+        /* =========================================
+           2. アニメーション初期状態
+           ========================================= */
+        .reveal-up { opacity: 0; transform: translateY(30px); }
+        .reveal-fade { opacity: 0; }
+
+        /* =========================================
+           3. ホバーインタラクション（モニュメント）
+           ========================================= */
+        .interactive-monument {
+            transition: all 0.6s cubic-bezier(0.83, 0, 0.17, 1);
+            clip-path: circle(50% at 50% 50%); /* 初期は円 */
+        }
+        .interactive-monument:hover {
+            clip-path: circle(100% at 50% 50%); /* ホバーで全体表示（四角になる） */
+            border-radius: 0;
+        }
+        .interactive-monument img {
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+        }
+        .interactive-monument:hover img {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+        
+        /* フォームのスタイル */
+        .form-input {
+            width: 100%;
+            border-bottom: 1px solid var(--color-gray);
+            padding: 1rem 0;
+            background: transparent;
+            transition: border-color 0.3s ease;
+            outline: none;
+            font-size: 1rem;
+        }
+        .form-input:focus {
+            border-bottom-color: var(--color-text);
+        }
+        
+        /* ドロップダウン（select）の矢印スタイル */
+        select.form-input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.2em;
+            padding-right: 2.5rem;
+        }
+    </style>
+</head>
+<body class="bg-white">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-200 transition-transform duration-300" id="header">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-10 h-20 flex justify-between items-center">
+            <a href="#" class="text-xl md:text-2xl font-bold tracking-wider">LUMIQ <span class="text-xs text-gray-400 font-normal hidden md:inline ml-2">by STREAM INC.</span></a>
+            
+            <nav class="hidden md:flex space-x-10 text-[13px] font-bold tracking-widest text-gray-800">
+                <a href="#concept" class="hover:text-gray-400 transition-colors">私たちについて</a>
+                <a href="#reasons" class="hover:text-gray-400 transition-colors">選ばれる理由</a>
+                <a href="#contact" class="hover:text-gray-400 transition-colors">お問い合わせ</a>
+            </nav>
+            <a href="#contact" class="md:hidden text-xs font-bold tracking-widest border border-black px-3 py-1">お問い合わせ</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="min-h-[90vh] pt-32 pb-20 px-6 md:px-10 flex flex-col justify-center max-w-[1600px] mx-auto relative">
+        <div class="relative z-10 w-full md:w-2/3 mb-10 md:mb-0">
+            <p class="text-sm md:text-base font-bold text-gray-500 mb-4 tracking-widest reveal-up" id="hero-sup">最新のWebサイトをもっと身近に</p>
+            <h1 class="fluid-h1 mb-6 reveal-up text-black" id="hero-title">
+                <span class="text-unit">大学生 × AI の力で、</span><br>
+                <span class="text-unit">御社の魅力を</span><br>
+                <span class="text-unit">最短・最安で届ける。</span>
+            </h1>
+            <p class="fluid-p mt-8 reveal-fade" id="hero-sub">
+                <span class="text-unit">Web制作の専門知識は一切不要です。</span><br>
+                <span class="text-unit">勉強中の現役大学生がAIを活用し、5万円からという低価格で</span><br>
+                <span class="text-unit">ホームページをご提案します。</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Concept / Intro Section -->
+    <section id="concept" class="section-padding bg-[#f8f8f8]">
+        <div class="max-w-[1200px] mx-auto text-center reveal-up">
+            <h2 class="fluid-h2 mb-8">「Webサイト、高くて手が出ない…」<br>そんなお悩みはありませんか？</h2>
+            <p class="fluid-p text-left md:text-center inline-block mb-10">
+                <span class="text-unit">「今の時代、ホームページは必要だとわかっているけれど、何十万もかけられない」</span><br>
+                <span class="text-unit">「誰に頼めばいいかわからないし、難しい専門用語ばかりで不安だ」</span><br><br>
+                <span class="text-unit">そんなお悩みを持つ経営者様へ。</span><br>
+                <span class="text-unit">現在、最新のAI技術を使ったWeb制作を<strong>勉強中の現役大学生</strong>が制作を担当します。</span><br>
+                <span class="text-unit">実務経験を積むためのプロジェクトとして、「低価格」と「スピード」でご提供します。</span><br>
+                <span class="text-unit">「学生の作るサイトって、どうなの？」と思われるかもしれません。</span>
+            </p>
+            <div>
+                <a href="#sample" class="inline-block border-b-2 border-black pb-1 text-lg md:text-xl font-bold hover:text-gray-500 hover:border-gray-500 transition-colors">
+                    まずは、実際のサンプルサイトをご覧ください ↓
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample / Works Section (期待値調整と導線) -->
+    <section id="sample" class="section-padding bg-white border-t border-gray-200">
+        <div class="max-w-[1400px] mx-auto">
+            <div class="text-center mb-12 reveal-up">
+                <p class="text-sm font-bold tracking-widest text-gray-500 mb-2">WORKS</p>
+                <h2 class="fluid-h2">サンプルサイト</h2>
+                <p class="fluid-p mt-4">
+                    「勉強中の学生に任せて、これくらいのサイトができるならお願いしてみようかな」<br>
+                    私たちが制作できる品質の目安として、以下のサンプルをご覧ください。
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Sample 1 -->
+                <a href="#" class="group reveal-up block">
+                    <div class="hover-scale-img aspect-video bg-gray-100 border border-gray-200">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop" alt="コーポレートサイト サンプル" class="w-full h-full object-cover">
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <h3 class="text-lg font-bold">コーポレートサイト（会社案内）</h3>
+                        <svg class="w-5 h-5 arrow-icon text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5 19L19 5M19 5v10M19 5H9"></path></svg>
+                    </div>
+                </a>
+                <!-- Sample 2 -->
+                <a href="#" class="group reveal-up block md:mt-12">
+                    <div class="hover-scale-img aspect-video bg-gray-100 border border-gray-200">
+                        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32b7?q=80&w=1632&auto=format&fit=crop" alt="採用サイト サンプル" class="w-full h-full object-cover">
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <h3 class="text-lg font-bold">採用特設サイト</h3>
+                        <svg class="w-5 h-5 arrow-icon text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5 19L19 5M19 5v10M19 5H9"></path></svg>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reasons (3つの強み) -->
+    <section id="reasons" class="section-padding border-t border-gray-200 bg-[#f8f8f8]">
+        <div class="max-w-[1400px] mx-auto">
+            <div class="text-center mb-16 reveal-up">
+                <p class="text-sm font-bold tracking-widest text-gray-500 mb-2">REASONS</p>
+                <h2 class="fluid-h2">選ばれる3つの理由</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Reason 1 -->
+                <div class="reveal-up block">
+                    <div class="text-6xl font-bold text-gray-200 mb-4 tracking-tighter">01</div>
+                    <h3 class="text-xl font-bold mb-4">安心の低価格<br><span class="text-base text-gray-500 font-normal">50,000円〜100,000円</span></h3>
+                    <p class="fluid-p">
+                        現在AI技術を活用した新しい制作手法の「勉強中」であるため、低価格でのご提供が可能です。プロではありませんが、お客様のために一生懸命制作いたします。
+                    </p>
+                </div>
+                <!-- Reason 2 -->
+                <div class="reveal-up block" style="transition-delay: 100ms;">
+                    <div class="text-6xl font-bold text-gray-200 mb-4 tracking-tighter">02</div>
+                    <h3 class="text-xl font-bold mb-4">圧倒的なスピード<br><span class="text-base text-gray-500 font-normal">AIの力で制作を加速</span></h3>
+                    <p class="fluid-p">
+                        文章の作成や構成の考案に最新のAIを活用します。これにより、お客様の待ち時間を削減し、素早くサイトを公開できます。
+                    </p>
+                </div>
+                <!-- Reason 3 -->
+                <div class="reveal-up block" style="transition-delay: 200ms;">
+                    <div class="text-6xl font-bold text-gray-200 mb-4 tracking-tighter">03</div>
+                    <h3 class="text-xl font-bold mb-4">丸投げOKの丁寧な対応<br><span class="text-base text-gray-500 font-normal">専門知識は不要です</span></h3>
+                    <p class="fluid-p">
+                        「何を載せればいいかわからない」という状態でもご安心ください。御社の魅力を引き出し、形にします。制作過程での修正依頼なども、お気軽にお任せください。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Showcase Section (ホバーで画像が出るデモ) -->
+    <section class="section-padding bg-black text-white overflow-hidden">
+        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="w-full md:w-1/2 mb-12 md:mb-0 reveal-up">
+                <p class="text-sm font-bold tracking-widest text-gray-400 mb-2">OUR SKILL</p>
+                <h2 class="fluid-h2 mb-6">「安い」だけではありません。<br>最新のデザイン表現も可能です。</h2>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    右の黒い円にカーソルを合わせてみてください。<br>
+                    このような「触って楽しい」インタラクティブな動きや、動画を使った洗練された表現も、私たちの得意分野です。<br>
+                    御社のWebサイトにも、このような魅力的な仕掛けを取り入れてみませんか？
+                </p>
+            </div>
+            
+            <!-- インタラクション・モニュメント -->
+            <div class="w-full md:w-1/2 flex justify-center reveal-up">
+                <div class="interactive-monument group relative w-64 h-64 md:w-80 md:h-80 bg-white flex items-center justify-center cursor-pointer">
+                    <!-- ホバー前のテキスト -->
+                    <span class="absolute z-20 text-black font-bold tracking-widest group-hover:opacity-0 transition-opacity duration-300">
+                        HOVER ME
+                    </span>
+                    
+                    <!-- ホバーで現れる画像とオーバーレイ -->
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" alt="Demo Image" class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <!-- ホバーで現れるテキスト -->
+                    <span class="relative z-30 text-white font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 flex items-center">
+                        READ MORE
+                        <svg class="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5 19L19 5M19 5v10M19 5H9"></path></svg>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section id="contact" class="section-padding bg-[#f8f8f8]">
+        <div class="max-w-[800px] mx-auto reveal-up">
+            <div class="text-center mb-12">
+                <p class="text-sm font-bold tracking-widest text-gray-500 mb-2">CONTACT</p>
+                <h2 class="fluid-h2 mb-4">お問い合わせ・無料相談</h2>
+                <p class="fluid-p">
+                    「まずは話だけ聞いてみたい」「いくらかかるか見積もりが欲しい」など、<br>
+                    どのようなことでもお気軽にご相談ください。
+                </p>
+            </div>
+
+            <form action="#" method="POST" class="bg-white p-8 md:p-12 shadow-sm border border-gray-100">
+                <div class="mb-8">
+                    <label for="company" class="block text-sm font-bold mb-2">会社名・屋号</label>
+                    <input type="text" id="company" class="form-input" placeholder="例：ストリーム株式会社">
+                </div>
+                <div class="mb-8">
+                    <label for="name" class="block text-sm font-bold mb-2">お名前 <span class="text-red-500 text-xs ml-1">必須</span></label>
+                    <input type="text" id="name" required class="form-input" placeholder="例：山田 太郎">
+                </div>
+                <div class="mb-8">
+                    <label for="email" class="block text-sm font-bold mb-2">メールアドレス <span class="text-red-500 text-xs ml-1">必須</span></label>
+                    <input type="email" id="email" required class="form-input" placeholder="例：info@example.com">
+                </div>
+                
+                <!-- ドロップダウンの実装例 -->
+                <div class="mb-8">
+                    <label for="type" class="block text-sm font-bold mb-2">ご相談の種別</label>
+                    <select id="type" class="form-input cursor-pointer appearance-none bg-white">
+                        <option value="" disabled selected>以下からお選びください</option>
+                        <option value="new">新しくホームページを作りたい</option>
+                        <option value="renew">今のホームページを新しくしたい（リニューアル）</option>
+                        <option value="consult">まずは話・見積もりだけ聞いてみたい</option>
+                        <option value="other">その他</option>
+                    </select>
+                </div>
+
+                <!-- チェックボックスの実装例 -->
+                <div class="mb-8">
+                    <span class="block text-sm font-bold mb-3">現在のホームページの有無</span>
+                    <div class="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-6">
+                        <label class="flex items-center cursor-pointer group">
+                            <input type="checkbox" name="has_website" value="yes" class="w-5 h-5 border-gray-300 rounded text-black focus:ring-black cursor-pointer">
+                            <span class="ml-3 text-sm group-hover:text-gray-500 transition-colors">現在、ホームページを持っている</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer group">
+                            <input type="checkbox" name="has_website" value="no" class="w-5 h-5 border-gray-300 rounded text-black focus:ring-black cursor-pointer">
+                            <span class="ml-3 text-sm group-hover:text-gray-500 transition-colors">持っていない（新設したい）</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <label for="phone" class="block text-sm font-bold mb-2">お電話番号</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="例：03-1234-5678">
+                </div>
+                <div class="mb-12">
+                    <label for="message" class="block text-sm font-bold mb-2">ご相談内容 <span class="text-red-500 text-xs ml-1">必須</span></label>
+                    <textarea id="message" rows="4" required class="form-input resize-none" placeholder="Webサイトを新しく作りたい、見積もりが欲しい、など自由にご記入ください。"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-black text-white font-bold tracking-widest py-4 px-12 hover:bg-gray-800 transition-colors inline-flex items-center group">
+                        送信する
+                        <svg class="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5 19L19 5M19 5v10M19 5H9"></path></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 pt-16 pb-8">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-10 text-center">
+            <div class="text-xl font-bold tracking-wider mb-2">LUMIQ</div>
+            <div class="text-sm text-gray-500 mb-8">運営：ストリーム株式会社</div>
+            <div class="text-[10px] md:text-xs text-gray-400">
+                &copy; STREAM INC. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // ヘッダーのスクロール制御
+            let lastScrollY = window.scrollY;
+            const header = document.getElementById('header');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    if (window.scrollY > lastScrollY) {
+                        header.style.transform = 'translateY(-100%)';
+                    } else {
+                        header.style.transform = 'translateY(0)';
+                    }
+                }
+                lastScrollY = window.scrollY;
+            });
+
+            // ヒーローセクションアニメーション
+            const tl = gsap.timeline();
+            tl.to("#hero-sup", { y: 0, opacity: 1, duration: 1, ease: "power3.out", delay: 0.2 })
+              .to("#hero-title", { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "-=0.8")
+              .to("#hero-sub", { opacity: 1, duration: 1, ease: "power2.out" }, "-=0.8");
+
+            // スクロール連動フェードイン
+            gsap.utils.toArray('.reveal-up').forEach(elem => {
+                gsap.to(elem, {
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power3.out"
+                });
+            });
+        });
+    </script>
+</body>
+</html>
